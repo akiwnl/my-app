@@ -1,5 +1,6 @@
 import * as jose from "jose";
 import { cookies } from "next/headers";
+import { NextResponse } from "next/server";
 
 async function openSessionToken(token: string) {
   const secret = new TextEncoder().encode(process.env.AUTH_SECRET);
@@ -22,9 +23,26 @@ async function createSessionToken(payload = {}) {
   });
 }
 
+async function isSessionValid() {
+  const sessionCookie = (await cookies()).get("session");
+  if (sessionCookie) {
+    const { value } = sessionCookie;
+    const { exp } = await openSessionToken(value);
+    const currentDate = new Date().getTime();
+
+    return (exp as number) * 1000 > currentDate;
+  }
+}
+
+async function destroySession(response: NextResponse): Promise<void> {
+  response.cookies.set("session", "", { path: "/", maxAge: 0 });
+}
+
 const AuthService = {
   openSessionToken,
   createSessionToken,
+  isSessionValid,
+  destroySession,
 };
 
 export default AuthService;
