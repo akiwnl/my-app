@@ -10,16 +10,17 @@ import { Label } from "@radix-ui/react-label";
 import { Input } from "@/components/ui/input";
 import { Button, buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
+import AuthActions from "@/modules/actions/auth-actions";
 
 export default function SignUpForm() {
   return (
     <Card className="w-[350px]">
       <CardHeader>
         <CardTitle>Crie sua conta!</CardTitle>
-        <CardDescription>Deploy your new project in one-click.</CardDescription>
+        <CardDescription>Preencha as informações abaixo.</CardDescription>
       </CardHeader>
-      <CardContent>
-        <form>
+      <form action={AuthActions.createAccount}>
+        <CardContent>
           <div className="grid w-full items-center gap-4">
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="name">Nome</Label>
@@ -34,17 +35,17 @@ export default function SignUpForm() {
               <Input id="password" name="password" type="password" required />
             </div>
           </div>
-        </form>
-      </CardContent>
-      <CardFooter className="flex justify-between ">
-        <Button>Criar Conta</Button>
-        <Link
-          href="/portal/login"
-          className={buttonVariants({ variant: "link" })}
-        >
-          Já tenho conta
-        </Link>
-      </CardFooter>
+        </CardContent>
+        <CardFooter className="flex justify-between ">
+          <Button type="submit">Criar Conta</Button>
+          <Link
+            href="/portal/login"
+            className={buttonVariants({ variant: "link" })}
+          >
+            Já tenho conta
+          </Link>
+        </CardFooter>
+      </form>
     </Card>
   );
 }
